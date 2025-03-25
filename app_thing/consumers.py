@@ -6,28 +6,26 @@ import cv2 as cv
 import numpy as np
 
 from .models import Thing, Image, ImageTag
-
 from .utils import image_recognition, qr_decoder, barcode_decoder
+
+from typing import Optional, Tuple
 from io import BytesIO
+from PIL import Image as Img
+
 from django.core.files.images import ImageFile
 from channels.db import database_sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
-from PIL import Image as Img
-
-
-# from django.contrib import sessions
-
 
 class ImageRecognitionConsumer(AsyncWebsocketConsumer):
-    thing_id = None
+    thing_id: Optional[int] = None
 
-    async def connect(self):
+    async def connect(self) -> None:
         await self.accept()
 
-    async def disconnect(self, close_code):
+    async def disconnect(self, close_code: int) -> None:
         await self.close()
 
-    async def receive(self, text_data=None, bytes_data=None):
+    async def receive(self, text_data: Optional[str] = None, bytes_data: Optional[bytes] = None) -> None:
         video_frame_after = None
 
         if text_data:
@@ -46,11 +44,9 @@ class ImageRecognitionConsumer(AsyncWebsocketConsumer):
                 try:
                     video_frame_after, count_of_good_matches = image_recognition(video_frame, image)
                     if count_of_good_matches > 70:
-                        print(image_object)
                         break
                     else:
                         video_frame_after = video_frame
-                        print("not found")
                         continue
                 except:
                     video_frame_after = video_frame
@@ -63,27 +59,26 @@ class ImageRecognitionConsumer(AsyncWebsocketConsumer):
             await self.send(text_data=json.dumps({'status': 'error', 'message': 'No video frame data received'}))
 
     @staticmethod
-    def read_image_bytes_and_convert_to_bytesio(image):
+    def read_image_bytes_and_convert_to_bytesio(image: Image) -> BytesIO:
         image_bytes = image.image.file.file.read()
         image_bytes_io = BytesIO(image_bytes)
         return image_bytes_io
 
     @database_sync_to_async
-    def get_images(self):
+    def get_images(self) -> list:
         images = list(Image.objects.filter(thing__id=self.thing_id).exclude(tag__name="QRCODE"))
         return images
 
-
 class AddImageConsumer(AsyncWebsocketConsumer):
-    thing_id = None
+    thing_id: Optional[int] = None
 
-    async def connect(self):
+    async def connect(self) -> None:
         await self.accept()
 
-    async def disconnect(self, close_code):
+    async def disconnect(self, close_code: int) -> None:
         await self.close()
 
-    async def receive(self, text_data=None, bytes_data=None):
+    async def receive(self, text_data: Optional[str] = None, bytes_data: Optional[bytes] = None) -> None:
         qr_code_data = None
         barcode = None
         message = ""
@@ -115,7 +110,7 @@ class AddImageConsumer(AsyncWebsocketConsumer):
                 img_byte_arr = screenshot_bytes_io
 
             end_image = ImageFile(img_byte_arr, name=self.get_random_name())
-            print(qr_code_data)
+
             if qr_code_data:
                 try:
                     tag = await database_sync_to_async(self.get_image_tag)("QRCODE")
@@ -131,40 +126,36 @@ class AddImageConsumer(AsyncWebsocketConsumer):
             modified_frame_data = base64.b64encode(img_byte_arr.getvalue()).decode('utf-8')
             await self.send(json.dumps({"image": modified_frame_data, "message": message}))
 
-
-    def get_thing(self):
+    def get_thing(self) -> Thing:
         return Thing.objects.get(id=self.thing_id)
 
     @database_sync_to_async
-    def update_barcode(self, barcode):
+    def update_barcode(self, barcode: str) -> int:
         return Thing.objects.filter(id=self.thing_id).update(barcode=barcode)
 
     @staticmethod
-    def get_image_tag(tag_name):
+    def get_image_tag(tag_name: str) -> ImageTag:
         return ImageTag.objects.get(name=tag_name)
 
-
     @staticmethod
-    def get_random_name():
+    def get_random_name() -> str:
         return ''.join(random.choices(string.ascii_uppercase + string.digits, k=30)) + ".jpg"
 
-
 class ScannerConsumer(AsyncWebsocketConsumer):
-    thing_id = None
+    thing_id: Optional[int] = None
 
-    async def connect(self):
+    async def connect(self) -> None:
         await self.accept()
 
-    async def disconnect(self, close_code):
+    async def disconnect(self, close_code: int) -> None:
         await self.close()
 
-    async def receive(self, text_data=None, bytes_data=None):
+    async def receive(self, text_data: Optional[str] = None, bytes_data: Optional[bytes] = None) -> None:
         if bytes_data:
             matched_thing = None
             barcode_type = None
             qr_code_type = None
             barcode_data = None
-
 
             video_frame_bytes_io = BytesIO(bytes_data)
             video_frame = Img.open(video_frame_bytes_io)
@@ -211,15 +202,14 @@ class ScannerConsumer(AsyncWebsocketConsumer):
                 await self.send(json.dumps({"found_thing": matched_thing.name, 'thing_id': matched_thing.id,
                                             'thing_description': matched_thing.description}))
 
-
     @database_sync_to_async
-    def get_qr_code_images(self):
+    def get_qr_code_images(self) -> list:
         return list(Image.objects.filter(tag__name="QRCODE"))
 
     @database_sync_to_async
-    def get_thing_id(self, img_id):
+    def get_thing_id(self, img_id: int) -> list:
         return list(Thing.objects.filter(image__id=img_id))
 
     @database_sync_to_async
-    def get_thing_codes(self, barcode):
+    def get_thing_codes(self, barcode: str) -> list:
         return list(Thing.objects.filter(barcode=barcode))

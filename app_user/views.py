@@ -1,14 +1,22 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
-
+from django.http import HttpRequest, HttpResponse
 
 from .forms import RegisterUserForm, LoginForm
 
 # Create your views here.
 
+def register_user(request: HttpRequest) -> HttpResponse:
+    """
+    Handle user registration.
 
-def register_user(request):
+    Args:
+        request (HttpRequest): The HTTP request object.
+
+    Returns:
+        HttpResponse: The rendered registration page or a redirect to all things page.
+    """
 
     form = RegisterUserForm
 
@@ -29,8 +37,16 @@ def register_user(request):
 
     return render(request, 'register.html', context)
 
+def login_user(request: HttpRequest) -> HttpResponse:
+    """
+    Handle user login.
 
-def login_user(request):
+    Args:
+        request (HttpRequest): The HTTP request object.
+
+    Returns:
+        HttpResponse: The rendered login page or a redirect to all things page.
+    """
     form = LoginForm()
 
     if request.method == "POST":
@@ -54,9 +70,16 @@ def login_user(request):
 
     return render(request, 'login.html', context)
 
+def user_logout(request: HttpRequest) -> HttpResponse:
+    """
+    Handle user logout.
 
-# @login_required(login_url='app_user:login')
-def user_logout(request):
+    Args:
+        request (HttpRequest): The HTTP request object.
+
+    Returns:
+        HttpResponse: A redirect to all things page.
+    """
     logout(request)
 
     return redirect('app_thing:all_things')

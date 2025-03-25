@@ -61,7 +61,17 @@ class ThingDeleteView(LoginRequiredMixin, DeleteView):
 
 
 @login_required(login_url="app_user:login")
-def image_recognition(request, pk):
+def image_recognition(request, pk: int):
+    """
+    Render the image recognition page for a specific thing.
+
+    Args:
+        request: The HTTP request object.
+        pk (int): The primary key of the thing.
+
+    Returns:
+        HttpResponse: The rendered image recognition page.
+    """
     request.session["user"] = str(request.user.uuid)
     thing = Thing.objects.get(id=pk)
 
@@ -72,11 +82,30 @@ def image_recognition(request, pk):
 
 @login_required(login_url="app_user:login")
 def scanner(request):
+    """
+    Render the scanner page.
+
+    Args:
+        request: The HTTP request object.
+
+    Returns:
+        HttpResponse: The rendered scanner page.
+    """
     return render(request, "scanner.html")
 
 
 @login_required(login_url="app_user:login")
-def add_image(request, pk):
+def add_image(request, pk: int):
+    """
+    Render the add image page for a specific thing.
+
+    Args:
+        request: The HTTP request object.
+        pk (int): The primary key of the thing.
+
+    Returns:
+        HttpResponse: The rendered add image page.
+    """
     thing = Thing.objects.get(id=pk)
 
     context = {
@@ -87,6 +116,15 @@ def add_image(request, pk):
 
 @login_required(login_url="app_user:login")
 def add_thing(request):
+    """
+    Handle the addition of a new thing.
+
+    Args:
+        request: The HTTP request object.
+
+    Returns:
+        HttpResponse: The rendered add thing page or a redirect to all things page.
+    """
     user = request.user
 
     form = ThingForm(user)
@@ -130,7 +168,17 @@ def add_thing(request):
 
 
 @login_required(login_url="app_user:login")
-def update_thing(request, pk):
+def update_thing(request, pk: int):
+    """
+    Handle the update of an existing thing.
+
+    Args:
+        request: The HTTP request object.
+        pk (int): The primary key of the thing.
+
+    Returns:
+        HttpResponse: The rendered update thing page or a redirect to all things page.
+    """
     thing = Thing.objects.get(id=pk)
     user = request.user
     image_form = ImageForm()
@@ -172,6 +220,15 @@ def update_thing(request, pk):
 
 @login_required(login_url="app_user:login")
 def things_map(request):
+    """
+    Render the map with all things for the logged-in user.
+
+    Args:
+        request: The HTTP request object.
+
+    Returns:
+        HttpResponse: The rendered map page.
+    """
     user = request.user
     things = Thing.objects.filter(owner=user)
 
@@ -207,6 +264,15 @@ def things_map(request):
 
 @login_required(login_url="app_user:login")
 def all_user_things(request):
+    """
+    Render the page with all things for the logged-in user.
+
+    Args:
+        request: The HTTP request object.
+
+    Returns:
+        HttpResponse: The rendered all things page or a JSON response with search results.
+    """
     user = request.user
     things = Thing.objects.filter(owner=user)
 
@@ -240,6 +306,15 @@ def all_user_things(request):
 
 @login_required(login_url="app_user:login")
 def location_management(request):
+    """
+    Render the location management page for the logged-in user.
+
+    Args:
+        request: The HTTP request object.
+
+    Returns:
+        HttpResponse: The rendered location management page.
+    """
     locations = Location.objects.filter(owner=request.user)
     context = {
         'locations': locations
@@ -248,4 +323,13 @@ def location_management(request):
 
 @login_required(login_url="app_user:login")
 def about(request):
+    """
+    Render the about page.
+
+    Args:
+        request: The HTTP request object.
+
+    Returns:
+        HttpResponse: The rendered about page.
+    """
     return render(request, 'about.html')

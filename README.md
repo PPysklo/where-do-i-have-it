@@ -19,6 +19,9 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 Install the required packages:
 ```bash
 pip install -r source/requirements.txt
+pip uninstall channels
+pip uninstall daphne
+python -m pip install -U channels["daphne"]
 ```
 Apply database migrations:
 ```bash

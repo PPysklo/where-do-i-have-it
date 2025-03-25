@@ -17,6 +17,7 @@ PHASE = os.environ.get("PHASE", "lab")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
 DJANGO_SETTINGS_MODULE='app.settings'
 
 # Quick-start development settings - unsuitable for production
@@ -35,6 +36,7 @@ CSRF_TRUSTED_ORIGINS = []
 
 INSTALLED_APPS = [
     'daphne',
+    'channels',
     'django.contrib.admin',
     'django.contrib.admindocs',
     'django.contrib.auth',
@@ -43,7 +45,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'channels',
     'django_extensions',
 
     'app_user.apps.AppUserConfig',

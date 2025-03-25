@@ -3,6 +3,8 @@ import cv2 as cv
 
 from sklearn.cluster import DBSCAN
 from PIL import Image as Img
+from PIL.Image import Image
+from typing import Tuple, Optional
 
 from pyzbar.pyzbar import decode
 from pyzbar.pyzbar import ZBarSymbol
@@ -12,8 +14,17 @@ from django.db.models import Q
 from .models import Thing, Location
 
 
-def search_thing(search_query, user_things=None):
+def search_thing(search_query: str, user_things: Optional[Thing] = None) -> Tuple[Thing, str]:
+    """
+    Search for things based on the search query.
 
+    Args:
+        search_query (str): The search query.
+        user_things (Optional[Thing]): The user's things to search within.
+
+    Returns:
+        Tuple[Thing, str]: The found things and the search query.
+    """
     location = Location.objects.filter(name__icontains=search_query)
 
     if user_things is not None:
@@ -32,7 +43,17 @@ def search_thing(search_query, user_things=None):
     return thing, search_query
 
 
-def image_recognition(img2, img1):
+def image_recognition(img2: Image, img1: Image) -> Tuple[Image, int]:
+    """
+    Perform image recognition using SIFT and DBSCAN clustering.
+
+    Args:
+        img2 (Img): The second image.
+        img1 (Img): The first image.
+
+    Returns:
+        Tuple[Img, int]: The image with the largest cluster points highlighted and the number of good matches.
+    """
     gray_img2 = cv.cvtColor(np.array(img2), cv.COLOR_RGB2GRAY)
     img1 = cv.cvtColor(np.array(img1), cv.COLOR_RGB2GRAY)
 
@@ -96,7 +117,16 @@ def image_recognition(img2, img1):
     return img2, len(good_matches)
 
 
-def qr_decoder(image):
+def qr_decoder(image: Image) -> Optional[Tuple[Image, str, str]]:
+    """
+    Decode QR codes from an image.
+
+    Args:
+        image (Img): The image containing QR codes.
+
+    Returns:
+        Optional[Tuple[Img, str, str]]: The cropped image, barcode type, and barcode data if a QR code is found.
+    """
     image = np.array(image)
 
     gray_img = cv.cvtColor(image, cv.COLOR_RGB2GRAY)
@@ -119,7 +149,16 @@ def qr_decoder(image):
         return Img.fromarray(img3), barcodeType, barcodeData
 
 
-def barcode_decoder(image):
+def barcode_decoder(image: Image) -> Optional[Tuple[Image, str, str]]:
+    """
+    Decode barcodes from an image.
+
+    Args:
+        image (Img): The image containing barcodes.
+
+    Returns:
+        Optional[Tuple[Img, str, str]]: The image, barcode type, and barcode data if a barcode is found.
+    """
     image = np.array(image)
 
     gray_img = cv.cvtColor(image, cv.COLOR_RGB2GRAY)
