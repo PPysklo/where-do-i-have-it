@@ -1,0 +1,32 @@
+{% extends 'index.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title">Login</h3>
+                    <form action="" method="post">
+                        {% csrf_token %}
+                        {% for field in form %}
+                        <div class="mb-3">
+                            <h5><label for="{{ field.id_for_label }}" class="form-label mb-0">{{ field.label }}</label></h5>
+                            <div>
+                            {{ field }}
+                            </div>
+                        </div>
+                        {% for error in field.errors %}
+                        <p style="color: red;">{{error}}</p>
+                        {% endfor %}
+                        {% endfor %}
+
+                        <button type="submit" class="btn btn-primary">Log in</button>
+                        <button type="" class="btn btn-primary"><a href="{% url 'app_user:register'%}" style="text-decoration: None; color: white;" >Register</a></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

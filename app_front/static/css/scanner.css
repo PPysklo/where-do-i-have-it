@@ -1,0 +1,6 @@
+.smaller-display {
+    width: 60%;
+    height: auto;
+    min-width: 500px;
+    min-height: 300px;
+}

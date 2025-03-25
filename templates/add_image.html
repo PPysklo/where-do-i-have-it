@@ -1,0 +1,83 @@
+{% extends 'index.html' %}
+{% load static %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% endblock styles %}
+
+{% block scripts %}
+<script>
+    const id = {{thing.id}};
+
+</script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script src="{% static 'js/add_image.js' %}"></script>
+<script src="https://unpkg.com/feather-icons"></script>
+{% endblock scripts %}
+
+
+{% block content %}
+<style>
+
+</style>
+
+<div class="container-fluid">
+    <div class="row-md-12 ">
+        <div class="col-md-12  justify-content-center">
+            <div class="display-cover smaller-display-cover mt-2 pt-2">
+                <video autoplay></video>
+                <canvas class="d-none"></canvas>
+
+                <div class="video-options">
+                    <select name="" id="" class="custom-select">
+                        <option value="">Select camera</option>
+                    </select>
+                </div>
+
+                <img class="screenshot-image d-none" alt="">
+
+                <div class="controls">
+                    <button class="btn btn-danger play" title="Play"><i data-feather="play-circle"></i></button>
+                    <button class="btn btn-outline-success screenshot d-none" id="play_btn" title="ScreenShot"><i
+                            data-feather="image"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <div class="row-md-12">
+        <div class="col-md-12">
+            <div class="">
+                <div class="card">
+                    <div class="card-body d-flex">
+                        <div class="" id="find-container">
+                            {% if thing.image_set.all %}
+
+                                <h2>Thing images:</h2>
+
+                                {% for img in thing.image_set.all %}
+                                    {% if img.tag.name == "QRCODE" %}
+                                        <p>QRCODE</p>
+                                        <img src="{{ img.image.url }}" class="img-fluid rounded existed-img">
+                                        <a href="{% url 'app_thing:delete_image' pk=img.id %}" style="color: black;">X</a>
+                                    {% else %}
+                                        <img src="{{ img.image.url }}" alt="Placeholder Image" class="img-fluid rounded existed-img">
+                                        <a href="{% url 'app_thing:delete_image' pk=img.id %}" class="delete-sign-small">X</a>
+                                {% endif %}
+
+                                {% endfor %}
+                            {% else %}
+                            <h1 id="deletethis">No images added</h1>
+                            {% endif %}
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock content %}

@@ -1,0 +1,59 @@
+{% extends 'index.html' %}
+{% load static %}
+
+{% block scripts %}
+<script src="{% static 'js/scanner.js' %}" defer></script>
+<script src="https://unpkg.com/feather-icons"></script>
+
+{% endblock scripts %}
+
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'css/scanner.css' %}">
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+{% endblock styles %}
+
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xl-6">
+            <div class="display-cover smaller-display">
+                <video autoplay></video>
+                <canvas class="d-none"></canvas>
+
+                <div class="video-options">
+                    <select name="" id="" class="custom-select">
+                        <option value="">Select camera</option>
+                    </select>
+                </div>
+
+                <img class="screenshot-image d-none" alt="">
+
+                <div class="controls">
+                    <button class="btn btn-danger play" title="Play"><i data-feather="play-circle"></i></button>
+                    <button class="btn btn-outline-success screenshot d-none" id="play_btn" title="ScreenShot"><i
+                            data-feather="image"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-6">
+    <div class="d-flex justify-content-center align-items-center mt-5">
+        <div class="card">
+            <div class="card-body">
+                <div id="find-container">
+                    <h1 id="deletethis">Search for things using QR code or barcode.</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    </div>
+</div>
+
+
+{% endblock content %}
+

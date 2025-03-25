@@ -1,0 +1,81 @@
+{% load static %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/navbar_style.css' %}">
+{% endblock style %}
+
+
+
+{% block navbar %}
+<nav class="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{% url 'app_thing:all_things' %}">Home</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        {% if user.is_authenticated %}
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                       aria-expanded="false">
+                        Things
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'app_thing:all_things' %}">List of things</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="{% url 'app_thing:locations' %}">Your Locations</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'app_thing:add_thing' %}">Add thing</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'app_thing:scanner' %}">Scanner</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'app_thing:things_map' %}">Things map</a>
+                </li>
+            </ul>
+
+            <form class="d-flex mx-auto" role="search" method="get" action="{% url 'app_thing:all_things' %}">
+                <input class="form-control me-2" id="search-query" type="search" placeholder="Search" name="search_query"
+                       aria-label="Search" value="{{search_query}}">
+                <button class="btn btn-outline-secondary" type="submit">🔎</button>
+            </form>
+
+            <ul class="navbar-nav user-menu ms-auto">
+                {% if user.is_authenticated %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" style="margin-right: 45px;" href="#" role="button" data-bs-toggle="dropdown"
+                       arial-expand="false">
+                        User menu
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <li><p class="dropdown-item">Logged as: {{user|title}}</p></li>
+                        <li><a class="dropdown-item" href="{% url 'app_thing:about' %}">About</a></li>
+                        <hr class="dropdown-divider">
+                        <li><a class="dropdown-item" href="{% url 'app_user:logout' %}" id="logOut">Log Out</a></li>
+
+                        {% if user.is_superuser %}
+                        <li><a class="dropdown-item" href="{% url 'admin:index' %}">Admin</a></li>
+                        <hr class="dropdown-divider">
+
+                        <li><p class="dropdown-item">{{VERSION}}</p></li>
+                        {% endif %}
+                    </ul>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="navbar-brand" href="{% url 'app_user:login' %}">Log In</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+</nav>
+{% endblock %}

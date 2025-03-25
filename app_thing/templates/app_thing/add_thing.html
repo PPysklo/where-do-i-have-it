@@ -1,0 +1,81 @@
+{% extends 'index.html' %}
+{% load static %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'css/thing.css' %}">
+{% endblock styles %}
+
+
+{% block content %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Add thing</h4>
+          <form id="thingForm" action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% for field in form %}
+              <div class="form-group">
+                {% if field.name != 'city' and field.name != 'street' and field.name != "street_address" %}
+                  {% if field.field.widget.input_type == 'text' %}
+                    <label for="{{ field.id_for_label }}" class="d-block">{{ field.label }}</label>
+                    <input class="form-control" id="{{ field.id_for_label }}" name="{{ field.name }}" placeholder="{{ field.label }}">
+                  {% else %}
+                    <label for="{{ field.id_for_label }}" class="col-form-label pt-4">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.name == 'existing_location'%}
+                    <button type="button" class="btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                      Add location
+                    </button>
+                    {% endif %}
+                  {% endif %}
+                {% endif %}
+              </div>
+            {% endfor %}
+            {{ image_form.management_form }}
+              {% for form in image_form %}
+                  {{ form }}
+              {% endfor %}
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add Location</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="form-group">
+                      <label for="city">City</label>
+                      <input type="text" class="form-control" id="city" name="city">
+                    </div>
+                    <div class="form-group">
+                      <label for="street">Street</label>
+                      <input type="text" class="form-control" id="street" name="street">
+                    </div>
+                    <div class="form-group">
+                      <label for="street_address">Street address</label>
+                      <input type="text" class="form-control" id="street_address" name="street_address">
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="saveLocation" data-bs-dismiss="modal">Save changes</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <br>
+            <button type="submit" class="btn btn-primary">Confirm</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="{% static 'js/thing.js' %}"></script>
+{% endblock %}
+
+
+

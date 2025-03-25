@@ -1,0 +1,47 @@
+{% include 'index.html' %}
+{% load static %}
+
+{% block scripts %}
+<script>
+        const id = {{thing.id}};
+
+</script>
+<script src="{% static 'js/image_reco.js' %}" defer></script>
+<script src="https://unpkg.com/feather-icons"></script>
+
+{% endblock scripts %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/image_reco.css' %}">
+
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12 mt-0 pt-0">
+            <div class="display-cover mt-2 pt-2 camera-options-container">
+                <video autoplay hidden> </video>
+
+                <div class="display-cover">
+                    <img id="img" class="img-fluid" onerror="this.style.display='none';">
+                </div>
+
+                <canvas class="d-none"></canvas>
+
+                <div class="video-options">
+                    <select name="" id="" class="custom-select">
+                        <option value="">Select camera</option>
+                    </select>
+                </div>
+
+                <div class="controls">
+                    <button class="btn btn-danger play" title="Play"><i data-feather="play-circle"></i></button>
+                    <button class="btn btn-outline-success screenshot d-none" id="play_btn" title="ScreenShot"><i data-feather="image"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
