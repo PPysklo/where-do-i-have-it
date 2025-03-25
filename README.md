@@ -8,8 +8,8 @@ Requirements
 ## Installation
 Clone the repository:
 ```bash
-git clone https://github.com/your-repository.git
-cd your-repository
+git clone https://github.com/PPysklo/where-do-i-have-it.git
+cd where-do-i-have-it
 ```
 Create and activate a virtual environment:
 ```bash
@@ -33,12 +33,31 @@ Start the development server:
 python manage.py runserver
 ```
 ## Usage
-1. Log in or register a new account.
-2. Add new items, locations, and images.
-3. Use the QR code or barcode scanner to search for items, or search using a live camera feed of an item image.
+1. Create superuser.
+2. Log in as a superuser.
+3. Add new items, locations, and images.
+4. Use the QR code or barcode scanner to search for items, or search using a live camera feed of an item image.
 
-Application Structure
-* app: Main Django configuration.
-* app_front: Application frontend.
-* app_thing: Item and location management.
-* app_user: User management.
+## QR scanner:
+<img src="./images/scanner.JPG"> 
+
+## Object detection:
+
+When a pattern is detected, the program highlights the region:
+| Pattern  | 
+| ------------- |
+| <img src="./images/headphones.jpg">  | 
+
+
+| Result | 
+| ------------- | 
+| <img src="./images/object.JPG">  | 
+
+## Map 
+This function renders a map displaying the locations of all "things" associated with the logged-in user. It utilizes the Folium library to create an interactive map and the Geopy library to convert location names into coordinates.
+<img src="./images/map.JPG">
+
+
+
+
+
