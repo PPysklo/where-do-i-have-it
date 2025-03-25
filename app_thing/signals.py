@@ -4,9 +4,17 @@ from django.utils import timezone
 
 from .models import Thing, History
 
-
 @receiver(post_save, sender=Thing)
-def create_or_update_history_entry(sender, instance, created, **kwargs):
+def create_or_update_history_entry(sender: type, instance: Thing, created: bool, **kwargs) -> None:
+    """
+    Create or update a history entry for a Thing instance.
+
+    Args:
+        sender (type): The model class.
+        instance (Thing): The instance of the model being saved.
+        created (bool): A boolean indicating whether the instance is being created.
+        **kwargs: Additional keyword arguments.
+    """
     previous_history_entry = History.objects.filter(thing=instance).order_by('-validFrom').first()
 
     if created:
@@ -40,6 +48,5 @@ def create_or_update_history_entry(sender, instance, created, **kwargs):
             description=f"{instance.name}, {instance.owner}, {instance.location}"
         )
         history_entry.save()
-
 
 post_save.connect(create_or_update_history_entry, sender=Thing)
