@@ -38,6 +38,9 @@ python manage.py runserver
 3. Add new items, locations, and images.
 4. Use the QR code or barcode scanner to search for items, or search using a live camera feed of an item image.
 
+## Main page:
+<img src="./images/main.JPG"> 
+
 ## QR scanner:
 <img src="./images/scanner.JPG"> 
 
